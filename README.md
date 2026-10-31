@@ -27,7 +27,7 @@ A complete, production-ready, futuristic 3D animated portfolio and content manag
 - **Experience & Education CRUD**: Add, edit, and delete milestones.
 - **Certifications CRUD**: Manage credentials and verification links.
 - **Inquiries Inbox**: View contact messages sent from the public website in real time, mark as read, or delete.
-- **Media Uploads**: Built-in support for Cloudinary with an automatic local filesystem fallback.
+- **Media Uploads**: Built-in support for Cloudinary with an automatic local filesystem fallback. Uploaded asset URLs are portable across frontend hosts.
 
 ---
 
@@ -92,7 +92,7 @@ ADMIN_NAME=Amit Suthar
 ADMIN_EMAIL=admin@example.com
 ADMIN_PASSWORD=ChangeThisPassword123!
 
-# Cloudinary (Optional - falls back to local storage if not provided)
+# Cloudinary (Required in production; local storage is only for local development)
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
@@ -136,3 +136,5 @@ VITE_API_URL=http://localhost:5001/api
 4. Add Environment Variable:
    - `VITE_API_URL`: `https://your-backend-service.onrender.com/api`
 5. Click **Deploy**.
+
+Cloudinary must be configured for production uploads. The local fallback writes to the backend filesystem, which is not durable on most hosted services and can disappear after a restart or redeploy.

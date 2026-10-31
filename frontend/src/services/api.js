@@ -7,7 +7,25 @@ import {
   initialCertificates
 } from '../data/placeholderData';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api').replace(/\/+$/, '');
+const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, '');
+
+export function resolveAssetUrl(assetUrl) {
+  if (!assetUrl || assetUrl === '#') return assetUrl;
+
+  try {
+    const url = new URL(assetUrl, window.location.origin);
+    const isLocalBackendUrl = ['localhost', '127.0.0.1'].includes(url.hostname);
+
+    if (assetUrl.startsWith('/uploads/') || isLocalBackendUrl) {
+      return `${API_ORIGIN}${url.pathname}${url.search}${url.hash}`;
+    }
+
+    return url.toString();
+  } catch {
+    return assetUrl;
+  }
+}
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,

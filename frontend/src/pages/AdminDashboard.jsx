@@ -5,7 +5,7 @@ import {
   AlertCircle, CheckCircle2, Loader2, Sparkles, Star, Eye
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { authService, adminService, portfolioService } from '../services/api';
+import { authService, adminService, portfolioService, resolveAssetUrl } from '../services/api';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -469,7 +469,7 @@ export default function AdminDashboard() {
                 <div className="p-6 rounded-2xl glass-panel border border-white/10 space-y-4 text-center">
                   <div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-[#a3e635]/60 shadow-xl bg-[#141822]">
                     {profile.avatarUrl ? (
-                      <img src={profile.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                      <img src={resolveAssetUrl(profile.avatarUrl)} alt="Avatar" className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-[#a3e635]">
                         {profile.name?.charAt(0) || 'A'}
@@ -533,7 +533,7 @@ export default function AdminDashboard() {
                   </div>
                   {profile.resumeUrl && (
                     <a
-                      href={profile.resumeUrl}
+                      href={resolveAssetUrl(profile.resumeUrl)}
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center gap-1.5 text-xs font-mono text-[#a3e635] hover:underline"
@@ -731,7 +731,7 @@ export default function AdminDashboard() {
                 >
                   <div className="relative h-44 bg-[#141824] overflow-hidden">
                     <img
-                      src={proj.imageUrl || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80'}
+                      src={resolveAssetUrl(proj.imageUrl) || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80'}
                       alt={proj.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />

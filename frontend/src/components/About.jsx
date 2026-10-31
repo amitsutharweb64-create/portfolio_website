@@ -1,4 +1,5 @@
 import React from 'react';
+import { resolveAssetUrl } from '../services/api';
 import { Compass, GraduationCap, MapPin, Target, Sparkles } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 
@@ -66,7 +67,7 @@ export default function About({ profile }) {
               <div className="relative rounded-2xl bg-[#0f1218] border border-white/10 p-6 space-y-6">
                 <div className="aspect-square w-full rounded-xl overflow-hidden relative border border-white/5 bg-[#171b24]">
                   <img
-                    src={profile?.avatarUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80"}
+                    src={resolveAssetUrl(profile?.avatarUrl) || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80"}
                     alt={profile?.name || "Amit Suthar"}
                     className="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
                     loading="lazy"

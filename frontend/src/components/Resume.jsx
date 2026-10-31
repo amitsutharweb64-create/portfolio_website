@@ -1,9 +1,10 @@
 import React from 'react';
 import { Download, FileText, Sparkles, CheckCircle2 } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { resolveAssetUrl } from '../services/api';
 
 export default function Resume({ profile }) {
-  const resumeUrl = profile?.resumeUrl || '#';
+  const resumeUrl = resolveAssetUrl(profile?.resumeUrl) || '#';
   const shouldReduceMotion = useReducedMotion();
 
   return (

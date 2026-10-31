@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ExternalLink, Sparkles, FolderGit2 } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { GithubIcon } from './SocialIcons';
+import { resolveAssetUrl } from '../services/api';
 
 export default function Projects({ projects = [] }) {
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -82,7 +83,7 @@ export default function Projects({ projects = [] }) {
                 {/* Image Preview Container */}
                 <div className="relative aspect-video w-full overflow-hidden bg-[#12151d] border-b border-white/5">
                   <img
-                    src={project.imageUrl || 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80'}
+                    src={resolveAssetUrl(project.imageUrl) || 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80'}
                     alt={project.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"

@@ -97,9 +97,8 @@ router.post('/', protect, upload.single('file'), async (req, res) => {
 
     await fs.promises.writeFile(filePath, req.file.buffer);
 
-    const protocol = req.protocol;
-    const host = req.get('host');
-    const fileUrl = `${protocol}://${host}/uploads/${fileName}`;
+    // Keep local URLs portable across frontend hosts and browser tabs.
+    const fileUrl = `/uploads/${fileName}`;
 
     return res.status(200).json({
       success: true,
