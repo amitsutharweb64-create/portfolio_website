@@ -105,7 +105,20 @@ export default function AdminDashboard() {
     e.preventDefault();
     setSaving(true);
     try {
-      const updated = await adminService.updateProfile(profile);
+      const profileToSave = {
+        ...profile,
+        avatarUrl: profile.avatarUrl?.trim() || '',
+        resumeUrl: profile.resumeUrl?.trim() || '',
+      };
+
+      if (profileToSave.avatarUrl) {
+        const avatarUrl = new URL(profileToSave.avatarUrl, window.location.origin);
+        if (!['http:', 'https:'].includes(avatarUrl.protocol)) {
+          throw new Error('Avatar URL must start with http:// or https://');
+        }
+      }
+
+      const updated = await adminService.updateProfile(profileToSave);
       setProfile(updated);
       showToast('Profile information updated successfully!');
     } catch (err) {
@@ -121,13 +134,26 @@ export default function AdminDashboard() {
     try {
       const res = await adminService.uploadFile(file);
       if (res.url) {
-        setProfile(prev => ({ ...prev, [targetField]: res.url }));
-        showToast(`File uploaded! URL set to ${targetField}. Remember to click "Save Profile".`);
+        const updatedProfile = {
+          ...profile,
+          [targetField]: res.url,
+        };
+        setProfile(updatedProfile);
+
+        if (targetField === 'avatarUrl') {
+          setSaving(true);
+          const savedProfile = await adminService.updateProfile(updatedProfile);
+          setProfile(savedProfile);
+          showToast('Avatar uploaded and saved successfully!');
+        } else {
+          showToast(`File uploaded! URL set to ${targetField}. Click "Save Profile" to save it.`);
+        }
       }
     } catch (err) {
       showToast('File upload failed: ' + err.message, 'error');
     } finally {
       setUploading(false);
+      setSaving(false);
     }
   };
 
@@ -469,7 +495,16 @@ export default function AdminDashboard() {
                 <div className="p-6 rounded-2xl glass-panel border border-white/10 space-y-4 text-center">
                   <div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-[#a3e635]/60 shadow-xl bg-[#141822]">
                     {profile.avatarUrl ? (
-                      <img src={resolveAssetUrl(profile.avatarUrl)} alt="Avatar" className="w-full h-full object-cover" />
+                      <img
+                        key={profile.avatarUrl}
+                        src={resolveAssetUrl(profile.avatarUrl)}
+                        alt="Avatar"
+                        className="w-full h-full object-cover"
+                        onError={(event) => {
+                          event.currentTarget.style.display = 'none';
+                          showToast('Avatar image could not be loaded. Use a direct image URL.', 'error');
+                        }}
+                      />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-[#a3e635]">
                         {profile.name?.charAt(0) || 'A'}
@@ -481,7 +516,7 @@ export default function AdminDashboard() {
                     <label className="block text-xs font-mono text-zinc-400 mb-2">Avatar Image File</label>
                     <label className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#161a24] border border-white/10 text-xs font-mono text-zinc-300 hover:text-white hover:border-[#a3e635]/40 transition-colors cursor-pointer w-full">
                       <Upload className="w-3.5 h-3.5 text-[#a3e635]" />
-                      <span>{uploading ? 'Uploading...' : 'Upload New Photo'}</span>
+                      <span>{uploading ? 'Uploading & Saving...' : 'Select Avatar Image'}</span>
                       <input
                         type="file"
                         accept="image/*"
@@ -494,7 +529,7 @@ export default function AdminDashboard() {
                   <div>
                     <label className="block text-[11px] font-mono text-zinc-500 mb-1">Direct Avatar URL</label>
                     <input
-                      type="url"
+                      type="text"
                       value={profile.avatarUrl || ''}
                       onChange={(e) => handleProfileChange('avatarUrl', e.target.value)}
                       placeholder="https://..."
