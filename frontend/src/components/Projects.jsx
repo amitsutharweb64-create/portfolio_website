@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ExternalLink, Sparkles, FolderGit2 } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
@@ -27,7 +28,7 @@ export default function Projects({ projects = [] }) {
   return (
     <section id="projects" className="py-24 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Section Header & Filter Controls */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <motion.div
@@ -41,9 +42,11 @@ export default function Projects({ projects = [] }) {
               <Sparkles className="w-3.5 h-3.5" />
               <span>03 // Creations</span>
             </div>
+
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-heading text-white">
               Featured Projects
             </h2>
+
             <div className="w-16 h-1 bg-[#a3e635] rounded-full mt-2" />
           </motion.div>
 
@@ -65,8 +68,11 @@ export default function Projects({ projects = [] }) {
           </div>
         </div>
 
-        {/* Projects Grid with AnimatePresence & layout transitions */}
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+        {/* Projects Grid */}
+        <motion.div
+          layout
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-left"
+        >
           <AnimatePresence>
             {filteredProjects.map((project) => (
               <motion.div
@@ -78,7 +84,7 @@ export default function Projects({ projects = [] }) {
                 exit="exit"
                 whileHover={shouldReduceMotion ? {} : { y: -6 }}
                 transition={{ duration: 0.3 }}
-                className="group rounded-3xl glass-panel border border-white/10 hover:border-[#a3e635]/50 overflow-hidden flex flex-col hover:shadow-2xl hover:shadow-[#a3e635]/10"
+                className="group rounded-2xl glass-panel border border-white/10 hover:border-[#a3e635]/50 overflow-hidden flex flex-col hover:shadow-2xl hover:shadow-[#a3e635]/10"
               >
                 {/* Image Preview Container */}
                 <div className="relative aspect-video w-full overflow-hidden bg-[#12151d] border-b border-white/5">
@@ -91,6 +97,7 @@ export default function Projects({ projects = [] }) {
                       event.currentTarget.src = 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80';
                     }}
                   />
+
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0f1218] via-transparent to-transparent opacity-60" />
 
                   {/* Category & Featured Badge */}
@@ -98,6 +105,7 @@ export default function Projects({ projects = [] }) {
                     <span className="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-black/75 backdrop-blur-md text-[#bef264] border border-[#a3e635]/30">
                       {project.category}
                     </span>
+
                     {project.featured && (
                       <span className="px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold bg-[#a3e635]/20 backdrop-blur-md text-[#a3e635] border border-[#a3e635]/40 flex items-center gap-1">
                         <Sparkles className="w-3 h-3" />
@@ -108,11 +116,12 @@ export default function Projects({ projects = [] }) {
                 </div>
 
                 {/* Card Body */}
-                <div className="p-7 flex-1 flex flex-col justify-between space-y-6">
+                <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                   <div className="space-y-3">
                     <h3 className="text-xl sm:text-2xl font-bold font-heading text-white group-hover:text-[#bef264] transition-colors">
                       {project.title}
                     </h3>
+
                     <p className="text-zinc-300 text-sm leading-relaxed">
                       {project.description}
                     </p>
@@ -143,6 +152,7 @@ export default function Projects({ projects = [] }) {
                           Live Demo
                         </a>
                       )}
+
                       {project.githubUrl && (
                         <a
                           href={project.githubUrl}
@@ -156,7 +166,6 @@ export default function Projects({ projects = [] }) {
                       )}
                     </div>
                   </div>
-
                 </div>
               </motion.div>
             ))}
