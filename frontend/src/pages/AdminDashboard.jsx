@@ -164,6 +164,7 @@ export default function AdminDashboard() {
     try {
       const payload = {
         ...editingProject,
+        imageUrl: editingProject.imageUrl?.trim() || '',
         technologies: typeof editingProject.technologies === 'string'
           ? editingProject.technologies.split(',').map(t => t.trim()).filter(Boolean)
           : editingProject.technologies
@@ -769,6 +770,9 @@ export default function AdminDashboard() {
                       src={resolveAssetUrl(proj.imageUrl) || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80'}
                       alt={proj.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      onError={(event) => {
+                        event.currentTarget.src = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80';
+                      }}
                     />
                     <div className="absolute top-3 left-3 flex items-center gap-2">
                       <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-[#08090b]/80 backdrop-blur-md border border-white/10 text-[#a3e635]">
@@ -941,7 +945,7 @@ export default function AdminDashboard() {
                           type="text"
                           value={editingProject.imageUrl || ''}
                           onChange={(e) => setEditingProject({ ...editingProject, imageUrl: e.target.value })}
-                          placeholder="https://images.unsplash.com/... or uploaded URL"
+                          placeholder="Select an image below or enter URL"
                           className="flex-1 px-3 py-2 rounded-xl bg-[#0e1118] border border-white/10 text-xs text-white focus:outline-none focus:border-[#a3e635]"
                         />
                         <label className="px-3 py-2 rounded-xl bg-[#141822] border border-white/10 text-xs font-mono text-zinc-300 hover:text-white cursor-pointer flex items-center gap-1.5 shrink-0">
@@ -959,7 +963,7 @@ export default function AdminDashboard() {
                                 const res = await adminService.uploadFile(file);
                                 if (res.url) {
                                   setEditingProject(prev => ({ ...prev, imageUrl: res.url }));
-                                  showToast('Project image uploaded!');
+                                  showToast('Project image uploaded. Click Save Project to publish it.');
                                 }
                               } catch (err) {
                                 showToast('Upload failed: ' + err.message, 'error');
@@ -970,6 +974,20 @@ export default function AdminDashboard() {
                           />
                         </label>
                       </div>
+                      {editingProject.imageUrl && (
+                        <div className="mt-3 h-36 rounded-xl overflow-hidden border border-white/10 bg-[#141824]">
+                          <img
+                            key={editingProject.imageUrl}
+                            src={resolveAssetUrl(editingProject.imageUrl)}
+                            alt="Project cover preview"
+                            className="w-full h-full object-cover"
+                            onError={(event) => {
+                              event.currentTarget.style.display = 'none';
+                              showToast('Project image could not be loaded.', 'error');
+                            }}
+                          />
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
